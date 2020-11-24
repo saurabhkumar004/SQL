@@ -33,5 +33,23 @@ on c2.id <> c1.id
 --where c2.id <> c1.id+1 and c2.id is not null
 s
 
+#### Finding second month Salary, if second month salary not given then first month salary
+with cte as
+(
 
+select personID, DateOfBonus, Salary,
+row_number() over(partition by personID order by DateOfBonus asc) as rn,
+count(DateOfBonus) over(partition by personID ) as cnt
+from SecondHighestSalaryTest
+
+)
+Select * from cte
+where
+ rn = 
+ (
+ CASE
+ when cnt >= 3 then 2
+when cnt < 3 then 1 --then (Select min(cnt) from cte where cnt < 3)
+ END
+ )
 
